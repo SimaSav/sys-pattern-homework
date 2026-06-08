@@ -1,6 +1,6 @@
 ## Ansible 2 - Savchenko Serafima
 
-#Task 1
+# Task 1
 
 ![motd.png](img/motd.png)
 ![unarch.png](img/unarch.png)
@@ -8,7 +8,7 @@
 
 ---
 
-#Task 2
+# Task 2
 
 ```
 ---
@@ -47,7 +47,7 @@
 
 ---
 
-#Task 3
+# Task 3
 
 playbook.yaml 
 ```
