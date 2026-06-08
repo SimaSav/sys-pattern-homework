@@ -1,0 +1,16 @@
+- name: daemon
+  hosts: localhost
+  connection: local
+  become: yes
+  tasks:
+    - name: update
+      ansible.builtin.apt:
+        name: tuned
+        state: present
+        update_cache: yes
+
+    - name: systemd
+      ansible.builtin.systemd:
+        name: tuned
+        state: started
+        enabled: yes

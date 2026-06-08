@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Системная информация сервера</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 40px; background-color: #f4f4f9; }
+        h1 { color: #333; }
+        table { border-collapse: collapse; width: 60%; background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #007BFF; color: white; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+    </style>
+</head>
+<body>
+    <h1>Характеристики сервера</h1>
+    <table>
+        <tr>
+            <th>Параметр</th>
+            <th>Значение</th>
+        </tr>
+        <tr>
+            <td>IP-адрес</td>
+            <td>{{ ansible_default_ipv4.address }}</td>
+        </tr>
+        <tr>
+            <td>Процессор (CPU)</td>
+            <td>{{ ansible_processor_count }} физический(их), {{ ansible_processor_cores }} ядро(ер) на каждый</td>
+        </tr>
+        <tr>
+            <td>Оперативная память (RAM)</td>
+            <td>{{ (ansible_memtotal_mb / 1024) | round(2) }} ГБ</td>
+        </tr>
+        <tr>
+            <td>Объем HDD (раздел /)</td>
+            <td>
+                {% set root_mount = ansible_mounts | selectattr('mount', 'equalto', '/') | list | first %}
+                {{ (root_mount.size_total / 1073741824) | round(2) if root_mount else 'Не определено' }} ГБ
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

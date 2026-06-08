@@ -1,0 +1,23 @@
+- name: download
+  hosts: localhost
+  connection: local
+  become: yes
+  tasks:
+    - name: mkdir
+      ansible.builtin.file:
+        path: /opt/ansible
+        state: directory
+        mode: '0755'
+        owner: root
+        group: root
+
+    - name:  curl
+      ansible.builtin.get_url:
+        url: https://github.com/ansible/ansible/archive/refs/tags/v2.21.0.tar.gz
+        dest: /tmp/stable.tar.gz
+        mode: '0644'
+
+    - name: unarch
+      ansible.builtin.unarchive:
+        src: /tmp/stable.tar.gz
+        dest: /opt/ansible

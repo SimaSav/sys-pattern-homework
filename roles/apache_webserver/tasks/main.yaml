@@ -1,0 +1,49 @@
+---
+- name: install
+  ansible.builtin.apt:
+    name: apache2
+    state: present
+    update_cache: yes
+
+- name: config
+  ansible.builtin.template:
+    src: custom_apache.conf.j2
+    dest: /etc/apache2/conf-available/ansible-managed.conf
+  notify: Restart Apache
+
+- name: manage apache
+  ansible.builtin.file:
+    src: /etc/apache2/conf-available/ansible-managed.conf
+    dest: /etc/apache2/conf-enabled/ansible-managed.conf
+    state: link
+  notify: Restart Apache
+
+- name: index
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+
+- name: enable apache
+  ansible.builtin.service:
+    name: apache2
+    state: started
+    enabled: yes
+
+- name: open port
+  ansible.builtin.iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: '80'
+    jump: ACCEPT
+    state: present
+
+- name: check
+  ansible.builtin.uri:
+    url: "http://{{ ansible_default_ipv4.address }}/"
+    status_code: 200
+  register: web_check
+  changed_when: false
+
+- name: result
+  ansible.builtin.debug:
+    msg: "Веб-сайт доступен! HTTP статус: {{ web_check.status }}"
